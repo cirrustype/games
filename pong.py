@@ -1,5 +1,6 @@
 #simple pong game
 
+
 #libraries 
 import turtle #comes with python?
 
@@ -39,10 +40,10 @@ ball.shape('square') #20x20
 ball.color('white')
 ball.penup() #stops the turtle from drawing a line w/ movment
 ball.goto(0, 0)
-ball.dx = .5 # horizontal movment by 2 pix
-ball.dy = .5 # vertical movment by 2 pix
+ball.dx = .1 # horizontal movment by 2 pix
+ball.dy = .1 # vertical movment by 2 pix
 # to move the ball put in main loop
-
+#make random???
 
 #animating the paddles 
 #function
@@ -114,6 +115,18 @@ while True:
     if ball.xcor() < -390:
         ball.goto(0,0)
         ball.dx *= -1
+
+    #paddle and ball collisions
+    if (ball.xcor() > 340 and ball.xcor() < 350) and (ball.ycor() < padb.ycor()+ 40 and ball.ycor() > padb.ycor() - 40):
+        ball.setx(340) #why????
+        ball.dx *= -1
+
+    if (ball.xcor() < -340 and ball.xcor() > -350) and (ball.ycor() < pada.ycor() + 40 and ball.ycor() > pada.ycor() - 40):
+        ball.setx(-340) #why????
+        ball.dx *= -1
+
+    
+
 
     
     
