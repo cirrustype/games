@@ -26,11 +26,65 @@ class cube(object):
 
 
 class snake(object):
+  body = [] #empty hard brackets is a blank list
+  turns = {} #set
   def __init__(self, color, pos):
-    pass
+    self.color = color
+    self.head = cube(pos)
+    self.body.append(self.head)
+    self.dirnx = 0
+    self.dirny = 1
 
   def move(self):
-    pass
+    #has to turn
+    for event in pygame.event.get():
+      if event.type == pygame.QUIT:
+        pygame.quit()
+
+      keys = pygame.key.get_pressed() #gets all pressed keys 
+
+      #this way creates a list of every key that is being pressed and 
+      #the folowing if statements provide direction for the keys that will 
+      #move the head of the snake. 
+
+      for key in keys:
+        if keys[pygame.K_LEFT]:
+          self.dirnx = -1
+          self.dirny = 0
+          #remember the turning location and store it in self.turn dictionary
+          self.turns[self.head.pos[:]] = [self.dirnx, self.dirny]
+
+
+        elif keys[pygame.K_RIGHT]: #else if to not more in 2 direction at once
+           self.dirnx = 1
+           self.dirny = 0
+           #remember the turning location and store it in self.turn #dictionary
+           self.turns[self.head.pos[:]] = [self.dirnx, self.dirny]
+
+        elif keys[pygame.K_UP]: #up is down in pygame
+           self.dirnx = 0
+           self.dirny = -1
+           #remember the turning location and store it in self.turn #dictionary
+           self.turns[self.head.pos[:]] = [self.dirnx, self.dirny]
+
+        elif keys[pygame.K_DOWN]:
+           self.dirnx = 0
+           self.dirny = 1
+           #remember the turning location and store it in self.turn #dictionary
+           self.turns[self.head.pos[:]] = [self.dirnx, self.dirny]
+
+
+     for i, c in enumerate(self.body): #where did the c come from????
+       p = c.pos[:]
+       if p in self.turns:
+         turn = self.turns[p]
+         c.move(turn[0], turn[1]) #when does turn[1] get recorded?
+         if i == len(self.body)-1: #snake - last cube
+           self.turns.pop(p)
+
+       else:
+         if:
+    
   
   def reset(self, pos):
     pass
