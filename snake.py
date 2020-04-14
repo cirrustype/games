@@ -36,7 +36,6 @@ class snake(object):
     self.dirny = 1
 
   def move(self):
-    #has to turn
     for event in pygame.event.get():
       if event.type == pygame.QUIT:
         pygame.quit()
@@ -48,6 +47,7 @@ class snake(object):
       #move the head of the snake. 
 
       for key in keys:
+        #Left turn
         if keys[pygame.K_LEFT]:
           self.dirnx = -1
           self.dirny = 0
@@ -55,35 +55,44 @@ class snake(object):
           self.turns[self.head.pos[:]] = [self.dirnx, self.dirny]
 
 
+        #Right turn
         elif keys[pygame.K_RIGHT]: #else if to not more in 2 direction at once
            self.dirnx = 1
            self.dirny = 0
            #remember the turning location and store it in self.turn #dictionary
            self.turns[self.head.pos[:]] = [self.dirnx, self.dirny]
 
+        #Up turn
         elif keys[pygame.K_UP]: #up is down in pygame
            self.dirnx = 0
            self.dirny = -1
            #remember the turning location and store it in self.turn #dictionary
            self.turns[self.head.pos[:]] = [self.dirnx, self.dirny]
 
+        #Down turn
         elif keys[pygame.K_DOWN]:
            self.dirnx = 0
            self.dirny = 1
            #remember the turning location and store it in self.turn #dictionary
            self.turns[self.head.pos[:]] = [self.dirnx, self.dirny]
+    for i, c in enumerate(self.body):
+      p = c.pos[:]
+      if p in self.turns:
+        turn = self.turns[p]
+        c.move(turn[0], turn[1]) #when does turn[1] get recorded?
+        if i == len(self.body)-1: #snake - last cube
+          self.turns.pop(p) #removes turn location after last cube has past
 
-
-     for i, c in enumerate(self.body): #where did the c come from????
-       p = c.pos[:]
-       if p in self.turns:
-         turn = self.turns[p]
-         c.move(turn[0], turn[1]) #when does turn[1] get recorded?
-         if i == len(self.body)-1: #snake - last cube
-           self.turns.pop(p)
-
-       else:
-         if:
+      else:
+        if c.dirnx == -1 and c.pos[0] <= 0: c.pos = (c.rows-1, c.pos[1])
+         #at right edge of screen move left
+        elif c.dirnx == 1 and c.pos[0] >= c.rows-1: c.pos = (0, c.pos[1])
+         #move to top if you hit the bottom
+        elif c.dirny == 1 and c.pos[0] >= c.rows-1: c.pos = (c.pos[0], 0)
+         #move to the bottom if you hit the top
+        elif c.dirny == -1 and c.pos[0] <= 0: c.pos = (c.pos[0], c.rows -1)
+         #if you don't hit anything just keep going
+        else: c.move(c.dirnx, c.dirny)
     
   
   def reset(self, pos):
@@ -93,7 +102,11 @@ class snake(object):
     pass
 
   def draw(self, surface):
-    pass
+    for i, c in enumerate(self.body):
+      if i == 0:
+        c.draw(surface, True) #draw eyes if its the first cube(head)
+      else:
+        c.draw(surface)
 
 #drawing the gridlines
 #def drawGrid(w, rows, surface):
@@ -113,8 +126,9 @@ def drawGrid(w, rows, surface) :
 
 # to redraw the window 
 def redrawWindow(surface):
-  global rows, width
+  global rows, width, s
   surface.fill((0,0,0)) #fills background, (0,0,0) = black
+  s.draw(surface)
   drawGrid(width, rows, surface) #draws grid lines, will define in another function
   pygame.display.update() #updates the surface
 
@@ -129,7 +143,7 @@ def massage_box(subject, content):
 
 #main game loop
 def main():
-  global width, rows #global??? hieght?
+  global width, rows, s #global??? hieght?
   width = 600
   rows = 30 # number of rows in surface
   #making surface with dim variables
@@ -150,3 +164,4 @@ def main():
 
 main()
 
+import this
